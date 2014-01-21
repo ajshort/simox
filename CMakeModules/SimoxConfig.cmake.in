@@ -1,0 +1,48 @@
+##  Copyright (c) 2014, Karlsruhe Institute of Technology (Nikolaus Vahrenkamp)
+
+
+# - Config file for the Simox package
+# It defines the following variables
+#  Simox_INCLUDE_DIRS       - include directories for Simox
+#  Simox_LIBRARIES          - libraries to link against
+#  Simox_EXECUTABLE         - the executables
+#  Simox_VISUALIZATION      - if visualization is enabled
+#  Simox_USE_COIN_VISUALIZATION   - if Coin3D visualization was selected
+
+if(Simox_FOUND)
+	return()
+endif()
+set(Simox_FOUND TRUE)
+
+# Compute paths
+get_filename_component(Simox_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+set(Simox_INCLUDE_DIRS "@CONF_INCLUDE_DIRS@")
+ 
+# Our library dependencies (contains definitions for IMPORTED targets)
+if(NOT TARGET Simox AND NOT Simox_BINARY_DIR)
+  include("${Simox_CMAKE_DIR}/SimoxTargets.cmake")
+endif()
+ 
+# These are IMPORTED targets created by SimoxTargets.cmake
+set(Simox_LIBRARIES "@Simox_LIBRARIES@")
+set(Simox_EXECUTABLE "@Simox_EXECUTABLE@")
+set(Simox_DATA_PATH "@Simox_DATA_PATH@")
+
+SET(Simox_VISUALIZATION "@Simox_VISUALIZATION@")
+SET(Simox_USE_COIN_VISUALIZATION "@Simox_USE_COIN_VISUALIZATION@")
+SET(Simox_USE_OPENSCENEGRAPH_VISUALIZATION "@Simox_USE_OPENSCENEGRAPH_VISUALIZATION@")
+SET(Simox_USE_COLLADA "@Simox_USE_COLLADA@")
+
+
+SET(Simox_EXTERNAL_INCLUDE_DIRS "@Simox_EXTERNAL_INCLUDE_DIRS@")
+SET(Simox_EXTERNAL_LIBRARY_FLAGS "@Simox_EXTERNAL_LIBRARY_FLAGS@")
+SET(Simox_EXTERNAL_LIBRARIES "@Simox_EXTERNAL_LIBRARIES@")
+SET(Simox_EXTERNAL_LIBRARY_DIRS "@Simox_EXTERNAL_LIBRARY_DIRS@")
+SET(Simox_EXTERNAL_CMAKE_INCLUDE "@Simox_EXTERNAL_CMAKE_INCLUDE@")
+
+
+
+if (NOT (Simox_FIND_QUIETLY OR VirtualRobot_FIND_QUIETLY)) 
+    MESSAGE(STATUS " * Including ${Simox_CMAKE_DIR}/SimoxMacros.cmake")
+endif()
+include(@Simox_MACROS_INCLUDE_DIR@/SimoxMacros.cmake)
