@@ -675,6 +675,11 @@ VirtualRobot::RobotNodeSetPtr CSpace::getRobotNodeSet() const
 	return robotNodes;
 }
 
+VirtualRobot::CDManagerPtr CSpace::getCDManager() const
+{
+	return cdm;
+}
+
 void CSpace::removeNode( CSpaceNodePtr node )
 {
 	SABA_ASSERT (node)
