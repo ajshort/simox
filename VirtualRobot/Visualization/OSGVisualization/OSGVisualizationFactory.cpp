@@ -496,8 +496,8 @@ VirtualRobot::VisualizationNodePtr OSGVisualizationFactory::createArrow( const E
 osg::Node* OSGVisualizationFactory::CreateArrow( const Eigen::Vector3f &n, float length /*= 50.0f*/, float width /*= 2.0f*/, const Color &color /*= Color::Gray()*/ )
 {
 	float coneHeight = width*6.0f;
-	float coneBotomRadius = width*2.5f;
-	osg::Group *res = new osg::Group;
+	float coneBottomRadius = width*2.5f;
+	osg::Group* res = new osg::Group;
 
 	osg::Vec3 objNormal(n(0),n(1),n(2));
 	osg::Matrix objNormalTrafo;
@@ -512,15 +512,17 @@ osg::Node* OSGVisualizationFactory::CreateArrow( const Eigen::Vector3f &n, float
 	res->addChild(arrow);
 
 	osg::Geode* geodeCyl = new osg::Geode;
-	osg::Cylinder* cyl = new osg::Cylinder(osg::Vec3(0,0,length*0.5),width,length);
+	osg::Cylinder* cyl = new osg::Cylinder(osg::Vec3(0, 0, (length - coneHeight) * 0.5f), width, length - coneHeight);
 	osg::ShapeDrawable* cylDraw = new osg::ShapeDrawable(cyl);
 	if (!color.isNone())
 		cylDraw->setColor(osg::Vec4(color.r,color.g,color.b,1.0-color.transparency));
 	geodeCyl->addDrawable(cylDraw);
 	arrow->addChild(geodeCyl);
 
+	osg::Cone* cone = new osg::Cone(osg::Vec3(0, 0, 0), coneBottomRadius, coneHeight);
+	cone->setCenter(osg::Vec3(0, 0, length - coneHeight * 0.5f + cone->getBaseOffset()));
+
 	osg::Geode* geodeCone = new osg::Geode;
-	osg::Cone* cone = new osg::Cone (osg::Vec3(0.0f, 0, length),coneBotomRadius,coneHeight);
 	osg::ShapeDrawable* coneDraw = new osg::ShapeDrawable(cone);
 	if (!color.isNone())
 		coneDraw->setColor(osg::Vec4(color.r,color.g,color.b,1.0-color.transparency));
