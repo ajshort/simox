@@ -241,50 +241,53 @@ IF (NOT Simox_CONFIGURED)
 		endif()
 		
 	elseif (Simox_USE_OPENSCENEGRAPH_VISUALIZATION)
-	
-	  MESSAGE(STATUS "Searching OSG and Qt...")
-	    
-	  FIND_PACKAGE(OpenSceneGraph REQUIRED osgViewer osgUtil osgDB osgGA)
-		
+		MESSAGE(STATUS "Searching OSG and Qt...")
+
+		FIND_PACKAGE(OpenSceneGraph REQUIRED osgViewer osgUtil osgDB osgGA)
+
 		if (OPENSCENEGRAPH_FOUND)
-		  MESSAGE (STATUS "Found OpenSceneGraph:" ${OPENSCENEGRAPH_INCLUDE_DIRS})
-			##INCLUDE_DIRECTORIES(${OPENSCENEGRAPH_INCLUDE_DIRS})
+			MESSAGE (STATUS "Found OpenSceneGraph:" ${OPENSCENEGRAPH_INCLUDE_DIRS})
 		endif (OPENSCENEGRAPH_FOUND)
-		
-		if ( QT_FOUND )
+
+		if (QT_FOUND)
 			MESSAGE (STATUS "Found Qt4: " ${QT_INCLUDE_DIR})
 			list(APPEND Simox_EXTERNAL_CMAKE_INCLUDE ${QT_USE_FILE})
 			include(${QT_USE_FILE})
-			#MESSAGE(STATUS "QT_LIBRARIES: " ${QT_LIBRARIES})
-		else ( QT_FOUND )
+		else (QT_FOUND)
 			MESSAGE (STATUS "Did not found Qt. Disabling Qt/OSG support.")
-		endif ( QT_FOUND )
-		
-		if (QT_FOUND AND OPENSCENEGRAPH_FOUND)
-	    MESSAGE (STATUS "Enabling OSG/Qt support")
-	    ### a little hack is needed here since osgQt is not supported in the FindOSG script
-	    MESSAGE("OPENSCENEGRAPH_LIBRARIES: ${OPENSCENEGRAPH_LIBRARIES}")
-	    LIST(GET OPENSCENEGRAPH_LIBRARIES 1 firstOsgLib)
-	    MESSAGE("firstOsgLib: ${firstOsgLib}")
-	    GET_FILENAME_COMPONENT(osgLibPath ${firstOsgLib} PATH)
-	    MESSAGE("osgLibPath: ${osgLibPath}")
-	    if (UNIX)
-		    list(APPEND OPENSCENEGRAPH_LIBRARIES ${osgLibPath}/libosgQt.so)
-	    else()
-		    list(APPEND OPENSCENEGRAPH_LIBRARIES optimized)
-		    list(APPEND OPENSCENEGRAPH_LIBRARIES ${osgLibPath}/osgQt.lib)
-	    	list(APPEND OPENSCENEGRAPH_LIBRARIES debug)
-	    	list(APPEND OPENSCENEGRAPH_LIBRARIES ${osgLibPath}/osgQtd.lib)
-	    endif()
-	    MESSAGE("OPENSCENEGRAPH_LIBRARIES: ${OPENSCENEGRAPH_LIBRARIES}")
-		  SET (Simox_VISUALIZATION TRUE)
-    	SET (Simox_VISUALIZATION_LIBS ${QT_LIBRARIES} ${OPENSCENEGRAPH_LIBRARIES} )
-    	SET (Simox_VISUALIZATION_INCLUDE_PATHS ${OPENSCENEGRAPH_INCLUDE_DIRS} )
-    	SET (Simox_VISUALIZATION_COMPILE_FLAGS "")
-		endif()
-		
+		endif (QT_FOUND)
+
+		if (OPENSCENEGRAPH_FOUND)
+			MESSAGE (STATUS "Enabling OSG support")
+			MESSAGE ("OPENSCENEGRAPH_LIBRARIES: ${OPENSCENEGRAPH_LIBRARIES}")
+
+			SET (Simox_VISUALIZATION TRUE)
+			SET (Simox_VISUALIZATION_LIBS ${OPENSCENEGRAPH_LIBRARIES})
+			SET (Simox_VISUALIZATION_INCLUDE_PATHS ${OPENSCENEGRAPH_INCLUDE_DIRS})
+			SET (Simox_VISUALIZATION_COMPILE_FLAGS "")
+
+			if (QT_FOUND)
+				SET (Simox_VISUALIZATION_LIBS ${Simox_VISUALIZATION_LIBS} ${QT_LIBRARIES})
+
+				# A hack is needed since osgQt is not supported in the FindOSG module.
+				LIST(GET OPENSCENEGRAPH_LIBRARIES 1 firstOsgLib)
+				MESSAGE("firstOsgLib: ${firstOsgLib}")
+
+				GET_FILENAME_COMPONENT(osgLibPath ${firstOsgLib} PATH)
+				MESSAGE("osgLibPath: ${osgLibPath}")
+
+				if (UNIX)
+					list(APPEND OPENSCENEGRAPH_LIBRARIES ${osgLibPath}/libosgQt.so)
+				else()
+					list(APPEND OPENSCENEGRAPH_LIBRARIES optimized)
+					list(APPEND OPENSCENEGRAPH_LIBRARIES ${osgLibPath}/osgQt.lib)
+					list(APPEND OPENSCENEGRAPH_LIBRARIES debug)
+					list(APPEND OPENSCENEGRAPH_LIBRARIES ${osgLibPath}/osgQtd.lib)
+				endif()
+			endif ()
+		endif ()
 	else()
-	    MESSAGE(STATUS "Visualization disabled")
+		MESSAGE(STATUS "Visualization disabled")
 	endif()
 	
 	if (Simox_USE_COLLADA)

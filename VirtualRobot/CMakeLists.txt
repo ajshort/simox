@@ -200,31 +200,29 @@ if (Simox_VISUALIZATION AND Simox_USE_COIN_VISUALIZATION)
 	ADD_SUBDIRECTORY(Visualization/CoinVisualization/tests)
 
 elseif (Simox_VISUALIZATION AND Simox_USE_OPENSCENEGRAPH_VISUALIZATION)
-
-	SET(SOURCES
-	${SOURCES}
-	Visualization/OSGVisualization/OSGVisualizationFactory.cpp
-	Visualization/OSGVisualization/OSGVisualizationNode.cpp
+  set(SOURCES
+    ${SOURCES}
+    Visualization/OSGVisualization/OSGVisualizationFactory.cpp
+    Visualization/OSGVisualization/OSGVisualizationNode.cpp
     Visualization/OSGVisualization/OSGVisualization.cpp
-    Visualization/OSGVisualization/osgQtWidget/osgViewerWidget.cpp
-	)
+  )
 
-	SET(INCLUDES
-	${INCLUDES}
-	Visualization/OSGVisualization/OSGVisualizationFactory.h
-	Visualization/OSGVisualization/OSGVisualizationNode.h
+  set(INCLUDES
+    ${INCLUDES}
+    Visualization/OSGVisualization/OSGVisualizationFactory.h
+    Visualization/OSGVisualization/OSGVisualizationNode.h
     Visualization/OSGVisualization/OSGVisualization.h
-    Visualization/OSGVisualization/osgQtWidget/osgViewerWidget.h
-	)
+  )
 
-	set(GUI_MOC_HDRS
-        Visualization/OSGVisualization/osgQtWidget/osgViewerWidget.h
-    )
+  ADD_SUBDIRECTORY(Visualization/OSGVisualization/tests)
+
+  if (QT_FOUND)
+    SET(SOURCES ${SOURCES} Visualization/OSGVisualization/osgQtWidget/osgViewerWidget.cpp)
+    SET(INCLUDES ${INCLUDES} Visualization/OSGVisualization/osgQtWidget/osgViewerWidget.h)
+
+    SET(GUI_MOC_HDRS Visualization/OSGVisualization/osgQtWidget/osgViewerWidget.h)
     qt4_wrap_cpp(SOURCES ${GUI_MOC_HDRS})
-
-	ADD_SUBDIRECTORY(Visualization/OSGVisualization/tests)
-	#ADD_SUBDIRECTORY(Visualization/OSGVisualization/osgQtViewer)
-
+  endif ()
 endif ()
 
 if (Simox_USE_COLLADA)
