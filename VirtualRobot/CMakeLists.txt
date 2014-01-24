@@ -49,6 +49,7 @@ Nodes/PositionSensorFactory.cpp
 Nodes/ForceTorqueSensorFactory.cpp
 Nodes/CameraSensorFactory.cpp
 Visualization/Visualization.cpp
+Visualization/VisualizationFactory.cpp
 Visualization/VisualizationNode.cpp
 Visualization/ColorMap.cpp
 Visualization/TriMeshModel.cpp

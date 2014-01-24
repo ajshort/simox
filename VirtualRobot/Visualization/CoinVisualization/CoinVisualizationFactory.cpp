@@ -329,17 +329,6 @@ namespace VirtualRobot {
         return visualizationNode;
     }
 
-    VirtualRobot::VisualizationNodePtr CoinVisualizationFactory::createLine( const Eigen::Vector3f &from, const Eigen::Vector3f &to, float width /*= 1.0f*/, float colorR /*= 0.5f*/, float colorG /*= 0.5f*/, float colorB /*= 0.5f*/ )
-    {
-        Eigen::Matrix4f fromM;
-        fromM.setIdentity();
-        fromM.block(0,3,3,1) = from;
-        Eigen::Matrix4f toM;
-        toM.setIdentity();
-        toM.block(0,3,3,1) = to;
-        return createLine(from,to,width,colorR,colorG,colorB);
-    }
-
     VisualizationNodePtr CoinVisualizationFactory::createSphere(float radius, float colorR, float colorG, float colorB)
     {
         SoSeparator *s = new SoSeparator();
