@@ -59,9 +59,9 @@ Eigen::VectorXf Trajectory::getPoint( unsigned int nr ) const
 	return path[nr];
 }
 
-TrajectoryPtr Trajectory::clone() const
+TrajectoryPtr Trajectory::clone(RobotNodeSetPtr rns) const
 {
-	TrajectoryPtr res(new Trajectory(rns,name));
+	TrajectoryPtr res(new Trajectory(rns ? rns : this->rns, name));
 	for (unsigned int i=0;i<getNrOfPoints();i++)
 	{
 		res->addPoint(getPoint(i));

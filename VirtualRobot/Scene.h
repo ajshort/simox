@@ -194,12 +194,19 @@ public:
 		\return The xml string.
 	*/
 	std::string getXMLString(const std::string &basePath);
+
+	/*!
+		Clones this scene and all attached objects.
+	*/
+	ScenePtr clone(const std::string &name, CollisionCheckerPtr collision = NULL, float scaling = 1.0f);
+
 protected:
+	typedef std::map< RobotPtr, std::vector< RobotConfigPtr > > RobotConfigMap;
 
 	std::string name;
 
 	std::vector< RobotPtr > robots;
-	std::map< RobotPtr, std::vector< RobotConfigPtr > > robotConfigs;
+	RobotConfigMap robotConfigs;
 	std::vector< ObstaclePtr > obstacles;
 	std::vector< ManipulationObjectPtr > manipulationObjects;
 	std::vector< SceneObjectSetPtr > sceneObjectSets;

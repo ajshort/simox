@@ -1,4 +1,3 @@
-
 #include "Scene.h"
 #include "VirtualRobotException.h"
 #include "ManipulationObject.h"
@@ -6,10 +5,10 @@
 #include "Trajectory.h"
 #include "XML/BaseIO.h"
 
+#include <boost/foreach.hpp>
+
 namespace VirtualRobot 
 {
-
-
 
 Scene::Scene(const std::string &name)
 :name(name)
@@ -620,7 +619,49 @@ std::string Scene::getXMLString( const std::string &basePath )
 	return ss.str();
 }
 
+ScenePtr Scene::clone(const std::string &name, CollisionCheckerPtr collision, float scaling)
+{
+	ScenePtr clone(new Scene(name));
+
+	BOOST_FOREACH (RobotPtr &robot, robots)
+	{
+		clone->registerRobot(robot->clone(robot->getName(), collision, scaling));
+	}
+
+	BOOST_FOREACH (RobotConfigMap::value_type &configs, robotConfigs)
+	{
+		RobotPtr robot = clone->getRobot(configs.first->getName());
+
+		BOOST_FOREACH (RobotConfigPtr &config, configs.second)
+		{
+			clone->registerRobotConfig(robot, config->clone(robot));
+		}
+	}
+
+	BOOST_FOREACH (ObstaclePtr &obstacle, obstacles)
+	{
+		clone->registerObstacle(obstacle->clone(obstacle->getName(), collision));
+	}
+
+	BOOST_FOREACH (ManipulationObjectPtr &manip, manipulationObjects)
+	{
+		clone->registerManipulationObject(manip->clone(manip->getName(), collision));
+	}
+
+	BOOST_FOREACH (SceneObjectSetPtr &set, sceneObjectSets)
+	{
+		clone->registerSceneObjectSet(set->clone(set->getName(), collision));
+	}
+
+	BOOST_FOREACH (TrajectoryPtr &trajectory, trajectories)
+	{
+		RobotPtr robot = clone->getRobot(trajectory->getRobotName());
+		RobotNodeSetPtr rns = robot->getRobotNodeSet(trajectory->getRobotNodeSet()->getName());
+
+		clone->registerTrajectory(trajectory->clone(rns));
+	}
+
+	return clone;
+}
 
 } //  namespace
-
-

@@ -75,7 +75,7 @@ public:
 	  Creates a copy of the instance.
 	  \return pointer to new instance (copy)
 	*/
-	TrajectoryPtr clone() const;
+	TrajectoryPtr clone(RobotNodeSetPtr rns = NULL) const;
 
 	/*!
 		Create a new trajectory from startIndex to endIndex.
