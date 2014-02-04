@@ -641,7 +641,10 @@ VirtualRobot::RobotPtr Robot::extractSubPart( RobotNodePtr startJoint, const std
 		if (roN)
 			roN->setJointValueNoUpdate(allNodes[i]->getJointValue());
 	}
+
 	result->applyJointValues();
+	result->setGlobalPose(getGlobalPose());
+
 	return result;
 }
 
